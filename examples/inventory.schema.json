@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["event", "id", "warehouse", "inventory"],
+  "properties": {
+    "event": { "type": "string" },
+    "id": { "type": "string" },
+    "warehouse": {
+      "type": "object",
+      "required": ["id", "contact_email"],
+      "properties": {
+        "id": { "type": "string" },
+        "contact_email": { "type": "string" }
+      }
+    },
+    "inventory": {
+      "type": "object",
+      "required": ["sku", "available"],
+      "properties": {
+        "sku": { "type": "string" },
+        "available": { "type": "integer", "minimum": 0 },
+        "reserved": { "type": "integer", "minimum": 0 },
+        "location": {
+          "type": "object",
+          "properties": {
+            "aisle": { "type": "string" },
+            "shelf": { "type": "integer" }
+          }
+        }
+      }
+    }
+  }
+}

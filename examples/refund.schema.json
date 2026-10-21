@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["event", "id", "customer", "refund"],
+  "properties": {
+    "event": { "type": "string" },
+    "id": { "type": "string" },
+    "customer": {
+      "type": "object",
+      "required": ["id", "email"],
+      "properties": {
+        "id": { "type": "string" },
+        "email": { "type": "string" }
+      }
+    },
+    "refund": {
+      "type": "object",
+      "required": ["id", "order_id", "amount", "currency"],
+      "properties": {
+        "id": { "type": "string" },
+        "order_id": { "type": "string" },
+        "amount": { "type": "number", "minimum": 0 },
+        "currency": { "type": "string", "enum": ["USD", "EUR", "GBP"] },
+        "reason": { "type": "string" },
+        "breakdown": {
+          "type": "object",
+          "properties": {
+            "item_total": { "type": "number" },
+            "tax_refunded": { "type": "number" }
+          }
+        }
+      }
+    }
+  }
+}
