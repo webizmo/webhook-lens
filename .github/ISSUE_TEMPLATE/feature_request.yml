@@ -1,0 +1,26 @@
+name: Feature request
+description: Describe an integration problem and how the tool could help.
+title: "[Feature]: "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+      description: Describe the workflow and what is difficult today.
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: What would a useful result look like?
+      description: A command example or small synthetic fixture can help.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives or workarounds
+      description: What have you tried, and where does it fall short?
+  - type: markdown
+    attributes:
+      value: Please keep examples synthetic and omit production data, credentials, and private information.

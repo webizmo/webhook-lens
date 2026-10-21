@@ -1,0 +1,26 @@
+{
+  "name": "@webizmo/webhook-lens",
+  "version": "0.1.0",
+  "description": "Understand webhook payloads before handing them to Claude: local JSON shape inspection, drift comparison, redaction and schema validation.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Webizmo (https://webizmo.tr)",
+  "repository": { "type": "git", "url": "git+https://github.com/webizmo/webhook-lens.git" },
+  "homepage": "https://github.com/webizmo/webhook-lens#readme",
+  "bugs": "https://github.com/webizmo/webhook-lens/issues",
+  "engines": { "node": ">=22" },
+  "bin": { "webhook-lens": "bin/webhook-lens.js" },
+  "files": ["bin", "src", "examples", "docs", "assets", "README.md", "README.tr.md", "LICENSE", "SECURITY.md", "CONTRIBUTING.md", "CODE_OF_CONDUCT.md"],
+  "scripts": {
+    "test": "node --test",
+    "demo": "node bin/webhook-lens.js demo",
+    "check": "node --check bin/webhook-lens.js && node --check src/mcp.js && node --check src/io.js && node --check src/core.js",
+    "mcp": "node bin/webhook-lens.js mcp"
+  },
+  "keywords": ["claude", "mcp", "webhooks", "json-schema", "api", "integration", "redaction", "developer-tools"],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.1",
+    "ajv": "8.20.0",
+    "zod": "4.6.7"
+  }
+}

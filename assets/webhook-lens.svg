@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="560" viewBox="0 0 1280 560" role="img" aria-labelledby="title desc">
+  <title id="title">Webhook Lens by Webizmo</title>
+  <desc id="desc">Inspect webhook JSON and see structural drift. An example changes order.total from number to string and adds order.status. CLI and Claude MCP, local JSON, MIT license.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#10232b"/>
+      <stop offset="1" stop-color="#0c111d"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#6ee7b7"/>
+      <stop offset="1" stop-color="#67d3f7"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="560" rx="28" fill="url(#bg)"/>
+  <path d="M0 452h1280M0 476h1280M0 500h1280M0 524h1280M0 548h1280" stroke="#1a2a35" stroke-width="1" opacity=".4"/>
+  <circle cx="1110" cy="130" r="190" fill="#163a43" opacity=".22"/>
+  <g font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+    <g transform="translate(56 48)">
+      <rect width="36" height="36" rx="10" fill="#173d40"/>
+      <path d="m12 10-5 8 5 8M24 10l5 8-5 8M21 8l-6 20" stroke="#6ee7b7" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="50" y="25" fill="#bfd0da" font-size="19" font-weight="600" letter-spacing="1">WEBIZMO / OPEN SOURCE</text>
+    </g>
+    <text x="56" y="157" fill="#f5fafc" font-size="65" font-weight="750" letter-spacing="-2">Webhook Lens</text>
+    <text x="58" y="205" fill="#a8becb" font-size="24">See what changed. Review what matters.</text>
+    <rect x="58" y="235" width="360" height="4" rx="2" fill="url(#accent)"/>
+    <text x="58" y="293" fill="#dce7ed" font-size="19">Local JSON inspection.</text>
+    <text x="58" y="325" fill="#dce7ed" font-size="19">Structural comparisons.</text>
+    <text x="58" y="357" fill="#dce7ed" font-size="19">A focused MCP workflow for Claude.</text>
+    <g transform="translate(58 421)">
+      <rect width="83" height="34" rx="17" fill="#18343b" stroke="#31515a"/>
+      <text x="41.5" y="22" text-anchor="middle" fill="#b9e9df" font-size="13" font-weight="600">CLI + MCP</text>
+      <rect x="97" width="95" height="34" rx="17" fill="#18343b" stroke="#31515a"/>
+      <text x="144.5" y="22" text-anchor="middle" fill="#b9e9df" font-size="13" font-weight="600">LOCAL JSON</text>
+      <rect x="206" width="52" height="34" rx="17" fill="#18343b" stroke="#31515a"/>
+      <text x="232" y="22" text-anchor="middle" fill="#b9e9df" font-size="13" font-weight="600">MIT</text>
+    </g>
+    <text x="58" y="512" fill="#7c98a8" font-size="15">github.com/webizmo/webhook-lens</text>
+    <g transform="translate(590 66)">
+      <rect width="630" height="416" rx="20" fill="#101b27" stroke="#30414e"/>
+      <path d="M0 52h630" stroke="#30414e"/>
+      <circle cx="25" cy="26" r="5" fill="#536a7b"/>
+      <circle cx="43" cy="26" r="5" fill="#536a7b"/>
+      <circle cx="61" cy="26" r="5" fill="#536a7b"/>
+      <text x="92" y="32" fill="#9bb0bf" font-size="14">STRUCTURAL DRIFT / ILLUSTRATIVE EXAMPLE</text>
+      <g font-family="'SFMono-Regular',Consolas,'Liberation Mono',monospace">
+        <text x="28" y="102" fill="#b7c9d6" font-size="13">$ node bin/webhook-lens.js compare before.json after.json</text>
+        <text x="28" y="149" fill="#87a3b6" font-size="13" letter-spacing="1">PATH</text>
+        <text x="325" y="149" fill="#87a3b6" font-size="13" letter-spacing="1">CHANGE</text>
+        <path d="M28 167h574" stroke="#263b49"/>
+        <rect x="18" y="184" width="594" height="53" rx="8" fill="#372f26" opacity=".65"/>
+        <text x="32" y="217" fill="#f8ce8a" font-size="18">/order/total</text>
+        <text x="325" y="217" fill="#f8ce8a" font-size="17">number → string</text>
+        <rect x="18" y="247" width="594" height="53" rx="8" fill="#173b36" opacity=".7"/>
+        <text x="32" y="280" fill="#8ce5c4" font-size="18">/order/status</text>
+        <text x="325" y="280" fill="#8ce5c4" font-size="17">added · string</text>
+        <text x="28" y="352" fill="#a9bdcb" font-size="15">Inspect → Compare → Validate</text>
+        <text x="28" y="382" fill="#6f8d9e" font-size="13">Structure gives you a place to start.</text>
+      </g>
+    </g>
+  </g>
+</svg>

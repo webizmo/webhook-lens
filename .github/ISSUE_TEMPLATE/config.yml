@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security and sensitive reports
+    url: https://github.com/webizmo/webhook-lens/blob/main/SECURITY.md
+    about: Read the private reporting guidance before sharing vulnerability details.
+  - name: Claude setup guide
+    url: https://github.com/webizmo/webhook-lens/blob/main/docs/claude.md
+    about: Installation, MCP configuration, and troubleshooting.

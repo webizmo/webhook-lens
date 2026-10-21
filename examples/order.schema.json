@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["event", "id", "customer", "order"],
+  "properties": {
+    "event": {"type": "string"},
+    "id": {"type": "string"},
+    "customer": {
+      "type": "object",
+      "required": ["id", "email"],
+      "properties": {"id": {"type": "string"}, "email": {"type": "string"}}
+    },
+    "order": {
+      "type": "object",
+      "required": ["id", "total", "currency", "items"],
+      "properties": {
+        "id": {"type": "string"},
+        "total": {"type": "number", "minimum": 0},
+        "currency": {"type": "string", "enum": ["USD", "EUR", "TRY"]},
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object", "required": ["sku", "quantity"],
+            "properties": {"sku": {"type": "string"}, "quantity": {"type": "integer", "minimum": 1}}
+          }
+        }
+      }
+    }
+  }
+}

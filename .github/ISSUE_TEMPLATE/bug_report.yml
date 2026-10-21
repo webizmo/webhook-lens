@@ -1,0 +1,43 @@
+name: Bug report
+description: Report a reproducible problem using synthetic JSON.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve Webhook Lens. Use synthetic fixtures only. Do not post production payloads, credentials, or personal data. For a security issue, read SECURITY.md first.
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Node version, operating system, and Webhook Lens version or commit.
+      placeholder: "Node 22.x; macOS/Linux/Windows; v0.1.0"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Include the exact CLI command or MCP tool call and a minimal synthetic fixture.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include output after checking it for sensitive field names and paths.
+    validations:
+      required: true
+  - type: checkboxes
+    id: synthetic
+    attributes:
+      label: Data check
+      options:
+        - label: I checked that this report contains no production data, credentials, or private information.
+          required: true

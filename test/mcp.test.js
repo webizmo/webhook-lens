@@ -1,0 +1,31 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { fileURLToPath } from 'node:url';
+import { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
+
+test('real MCP SDK client negotiates and calls all three tools without raw values', async t => {
+  const script = fileURLToPath(new URL('../bin/webhook-lens.js', import.meta.url));
+  const root = fileURLToPath(new URL('../examples', import.meta.url));
+  const transport = new StdioClientTransport({ command: process.execPath, args: [script, 'mcp', '--root', root], stderr: 'pipe' });
+  const client = new Client({ name: 'webhook-lens-test', version: '1.0.0' });
+  t.after(() => client.close());
+  await client.connect(transport);
+  const { tools } = await client.listTools();
+  assert.deepEqual(tools.map(tool => tool.name).sort(), ['compare_payloads', 'inspect_payload', 'validate_payload']);
+  assert.ok(tools.every(tool => tool.annotations.readOnlyHint));
+  const inspection = await client.callTool({ name: 'inspect_payload', arguments: { file: 'order.created.json' } });
+  assert.ok(!inspection.isError);
+  assert.ok(!JSON.stringify(inspection).includes('alex@example.test'));
+  assert.ok(!JSON.stringify(inspection).includes('demo-token-not-a-credential'));
+  const comparison = await client.callTool({ name: 'compare_payloads', arguments: { before: 'order.created.json', after: 'order.updated.json' } });
+  assert.ok(comparison.structuredContent.typeChanged.some(change => change.path === '/order/total'));
+  const valid = await client.callTool({ name: 'validate_payload', arguments: { file: 'order.created.json', schema: 'order.schema.json' } });
+  assert.equal(valid.structuredContent.valid, true);
+  const invalid = await client.callTool({ name: 'validate_payload', arguments: { file: 'order.updated.json', schema: 'order.schema.json' } });
+  assert.equal(invalid.structuredContent.valid, false);
+  const outside = await client.callTool({ name: 'inspect_payload', arguments: { file: '../package.json' } });
+  assert.equal(outside.isError, true);
+  const remote = await client.callTool({ name: 'inspect_payload', arguments: { file: 'https://example.test/payload.json' } });
+  assert.equal(remote.isError, true);
+});
