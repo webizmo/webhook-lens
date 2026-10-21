@@ -32,6 +32,23 @@ node bin/webhook-lens.js compare before.json after.json --fail-on-drift
 
 This is a structural comparison. A price changing from `100` to `1000` can keep the same type and still have an important business effect.
 
+### Example fixtures
+
+In addition to order events, `examples/` includes synthetic fixtures for inventory and refund events:
+
+```sh
+# Compare inventory updates (demonstrates location removal, backorder addition, and available quantity type change)
+node bin/webhook-lens.js compare examples/inventory.updated.v1.json examples/inventory.updated.v2.json
+
+# Validate inventory against its Draft-07 contract
+node bin/webhook-lens.js validate examples/inventory.updated.v1.json --schema examples/inventory.schema.json
+
+# Compare refund events (demonstrates breakdown removal and amount stringification)
+node bin/webhook-lens.js compare examples/refund.created.v1.json examples/refund.created.v2.json
+```
+
+*Note: These fixtures are generic and illustrative. Structural compatibility between two samples does not establish a universal guarantee across all possible payloads or unobserved edge cases.*
+
 ## Validate
 
 ```sh
