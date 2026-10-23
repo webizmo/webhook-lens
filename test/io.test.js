@@ -11,11 +11,19 @@ test('root rejects traversal and symlink escape, accepts files and BOM', async t
   const root = path.join(dir, 'root'); await mkdir(root);
   await writeFile(path.join(root, 'ok.json'), '\uFEFF{"a":1}');
   await writeFile(path.join(dir, 'outside.json'), '{"secret":"never-return-this"}');
-  await symlink(path.join(dir, 'outside.json'), path.join(root, 'escape.json'));
   assert.deepEqual(await readJson('ok.json', { root }), { a: 1 });
   await assert.rejects(readJson('../outside.json', { root }), /outside/);
-  await assert.rejects(readJson('escape.json', { root }), /outside/);
   await assert.rejects(readJson('https://example.test/data.json', { root }), /URLs/);
+  try {
+    await symlink(path.join(dir, 'outside.json'), path.join(root, 'escape.json'));
+    await assert.rejects(readJson('escape.json', { root }), /outside/);
+  } catch (error) {
+    if (process.platform === 'win32' && (error.code === 'EPERM' || error.code === 'EACCES')) {
+      // Windows unprivileged environments cannot create symlinks without Developer Mode enabled
+      return;
+    }
+    throw error;
+  }
 });
 
 test('errors are bounded and do not echo bad JSON, credentials or filename', async t => {
