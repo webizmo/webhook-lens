@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { inspectPayload, comparePayloads, redactPayload, validatePayload } from '../src/core.js';
+import { inspectPayload, comparePayloads, formatMarkdownComparison, redactPayload, validatePayload } from '../src/core.js';
 
 const byPath = result => new Map(result.paths.map(record => [record.path, record]));
 
@@ -41,6 +41,36 @@ test('comparison reports observed paths and type drift without any sample values
     ],
   });
   assert.ok(!JSON.stringify(result).includes('sensitive-'));
+});
+
+test('formatMarkdownComparison formats drift correctly, handles empty sections, and escapes Markdown/HTML', () => {
+  const emptyDrift = { added: [], removed: [], typeChanged: [] };
+  const emptyReport = formatMarkdownComparison(emptyDrift);
+  assert.ok(emptyReport.includes('### Webhook Structural Comparison Report'));
+  assert.ok(emptyReport.includes('> **Notice:** This comparison describes structural differences'));
+  assert.ok(emptyReport.includes('- **Added paths:** 0'));
+  assert.ok(emptyReport.includes('- **Removed paths:** 0'));
+  assert.ok(emptyReport.includes('- **Type changes:** 0'));
+  assert.ok(emptyReport.includes('#### Added\n_None_'));
+  assert.ok(emptyReport.includes('#### Removed\n_None_'));
+  assert.ok(emptyReport.includes('#### Type Changes\n_None_'));
+
+  const complexDrift = {
+    added: ['/<script>alert(1)</script>', '/markdown_*_bold/[0]'],
+    removed: ['/items/*/price_$_total'],
+    typeChanged: [
+      { path: '/unicode/Türkçe_çşğ', before: ['string'], after: ['number', 'null'] },
+      { path: '/table|pipe|break', before: ['boolean'], after: ['array'] },
+    ],
+  };
+  const report = formatMarkdownComparison(complexDrift);
+  assert.ok(!report.includes('<script>'));
+  assert.ok(report.includes('\\<script\\>alert\\(1\\)\\<\\/script\\>'));
+  assert.ok(report.includes('\\*'));
+  assert.ok(report.includes('\\|'));
+  assert.ok(report.includes('Türkçe\\_çşğ'));
+  assert.ok(report.includes('`number, null`'));
+  assert.ok(report.includes('| Path | Baseline | Candidate |'));
 });
 
 test('redaction recognizes camelCase, snake_case, kebab-case and explicit custom keys', () => {

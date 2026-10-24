@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { parseArgs } from 'node:util';
 import { fileURLToPath } from 'node:url';
-import { inspectPayload, comparePayloads, redactPayload } from '../src/core.js';
+import { inspectPayload, comparePayloads, formatMarkdownComparison, redactPayload } from '../src/core.js';
 import { readJson, writeNewJson } from '../src/io.js';
 import { validateBounded } from '../src/validate.js';
 
@@ -9,7 +9,7 @@ const HELP = `Webhook Lens 0.1.0 — understand webhook JSON before handing it t
 
 Usage:
   webhook-lens inspect <payload.json>
-  webhook-lens compare <before.json> <after.json> [--fail-on-drift]
+  webhook-lens compare <before.json> <after.json> [--fail-on-drift] [--format json|markdown]
   webhook-lens redact <payload.json> --output <new.json> [--keys email,customField]
   webhook-lens validate <payload.json> --schema <schema.json>
   webhook-lens demo
@@ -29,7 +29,7 @@ try {
   try {
     parsed = parseArgs({ allowPositionals: true, options: {
       output: { type: 'string' }, keys: { type: 'string' }, schema: { type: 'string' },
-      root: { type: 'string' }, 'fail-on-drift': { type: 'boolean' },
+      root: { type: 'string' }, 'fail-on-drift': { type: 'boolean' }, format: { type: 'string' },
       help: { type: 'boolean', short: 'h' }, version: { type: 'boolean', short: 'v' }
     } });
   } catch {
@@ -39,15 +39,21 @@ try {
   if (values.version) process.stdout.write('0.1.0\n');
   else if (values.help || !command) process.stdout.write(HELP);
   else {
-    const allowed = { inspect: [], compare: ['fail-on-drift'], redact: ['output', 'keys'], validate: ['schema'], mcp: ['root'], demo: [] };
+    const allowed = { inspect: [], compare: ['fail-on-drift', 'format'], redact: ['output', 'keys'], validate: ['schema'], mcp: ['root'], demo: [] };
     if (!Object.hasOwn(allowed, command)) throw new Error('Unknown command. Run webhook-lens --help.');
     if (Object.keys(values).some(key => !allowed[command].includes(key))) throw new Error('This option is not supported for the selected command.');
     if (command === 'inspect') {
       needCount(args, 1); print(inspectPayload(await readJson(args[0])));
     } else if (command === 'compare') {
       needCount(args, 2);
+      const format = values.format ?? 'json';
+      if (format !== 'json' && format !== 'markdown') throw new Error('Comparison --format must be either "json" or "markdown".');
       const result = comparePayloads(await readJson(args[0]), await readJson(args[1]));
-      print(result);
+      if (format === 'markdown') {
+        process.stdout.write(`${formatMarkdownComparison(result)}\n`);
+      } else {
+        print(result);
+      }
       if (values['fail-on-drift'] && (result.added.length || result.removed.length || result.typeChanged.length)) process.exitCode = 1;
     } else if (command === 'redact') {
       needCount(args, 1);

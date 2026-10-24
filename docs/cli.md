@@ -30,6 +30,12 @@ By default, finding drift is a successful inspection and exits with `0`. To fail
 node bin/webhook-lens.js compare before.json after.json --fail-on-drift
 ```
 
+To format the comparison as a Markdown report suitable for pull request summaries and documentation:
+
+```sh
+node bin/webhook-lens.js compare before.json after.json --format markdown
+```
+
 This is a structural comparison. A price changing from `100` to `1000` can keep the same type and still have an important business effect.
 
 ## Validate
