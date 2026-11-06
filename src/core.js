@@ -174,6 +174,62 @@ export function comparePayloads(before, after) {
   };
 }
 
+function escapeMarkdown(text) {
+  return String(text).replace(/[\\`*_{}[\]()#+\-.!|/<>]/g, '\\$&');
+}
+
+/** Formats structural comparison drift as an opt-in Markdown report. */
+export function formatMarkdownComparison(drift) {
+  if (!drift || typeof drift !== 'object') {
+    fail('INVALID_COMPARISON_RESULT', 'Drift comparison result must be an object.');
+  }
+  const lines = [
+    '### Webhook Structural Comparison Report',
+    '',
+    '> **Notice:** This comparison describes structural differences between two specific payload samples and does not establish a universal compatibility guarantee.',
+    '',
+    '#### Summary',
+    `- **Added paths:** ${drift.added.length}`,
+    `- **Removed paths:** ${drift.removed.length}`,
+    `- **Type changes:** ${drift.typeChanged.length}`,
+    '',
+    '#### Added',
+  ];
+
+  if (drift.added.length === 0) {
+    lines.push('_None_');
+  } else {
+    for (const path of drift.added) {
+      lines.push(`- \`${escapeMarkdown(path)}\``);
+    }
+  }
+
+  lines.push('', '#### Removed');
+  if (drift.removed.length === 0) {
+    lines.push('_None_');
+  } else {
+    for (const path of drift.removed) {
+      lines.push(`- \`${escapeMarkdown(path)}\``);
+    }
+  }
+
+  lines.push('', '#### Type Changes');
+  if (drift.typeChanged.length === 0) {
+    lines.push('_None_');
+  } else {
+    lines.push('| Path | Baseline | Candidate |');
+    lines.push('| :--- | :--- | :--- |');
+    for (const item of drift.typeChanged) {
+      const escapedPath = `\`${escapeMarkdown(item.path)}\``;
+      const beforeTypes = `\`${escapeMarkdown(item.before.join(', '))}\``;
+      const afterTypes = `\`${escapeMarkdown(item.after.join(', '))}\``;
+      lines.push(`| ${escapedPath} | ${beforeTypes} | ${afterTypes} |`);
+    }
+  }
+
+  return lines.join('\n');
+}
+
 /** Best-effort masking. Review the returned fixture before sharing it. */
 export function redactPayload(value, extraKeys = []) {
   checkJson(value);

@@ -23,6 +23,12 @@ test('exit codes support CI without confusing drift with tool failure', () => {
   const args = ['compare', 'examples/order.created.json', 'examples/order.updated.json'];
   assert.equal(cli(...args).status, 0);
   assert.equal(cli(...args, '--fail-on-drift').status, 1);
+  assert.equal(cli(...args, '--format', 'markdown').status, 0);
+  const mdResult = cli(...args, '--format', 'markdown');
+  assert.ok(mdResult.stdout.includes('### Webhook Structural Comparison Report'));
+  assert.ok(mdResult.stdout.includes('- `\\/order\\/status`'));
+  assert.equal(cli(...args, '--format', 'markdown', '--fail-on-drift').status, 1);
+  assert.equal(cli(...args, '--format', 'invalid-fmt').status, 2);
   assert.equal(cli('validate', 'examples/order.created.json', '--schema', 'examples/order.schema.json').status, 0);
   assert.equal(cli('validate', 'examples/order.updated.json', '--schema', 'examples/order.schema.json').status, 1);
   assert.equal(cli('mcp').status, 2);
